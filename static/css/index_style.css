@@ -1,0 +1,9 @@
+.carousel-item img {
+    height: 80vh; /* Ajusta este valor a la altura que prefieras */
+    object-fit: cover;
+}
+
+body{
+    background-color: #333;
+    color: white;
+}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Festival Al Loro</title>
+    <link rel="icon" href="{{url_for('static', filename='images/logo_byv.png')}}" type="image/x-icon">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <!-- Slick Carousel CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+    <style>
+        .logo-size {
+            max-width: 200px;
+            height: auto;
+            display: block;
+            margin: auto;
+        }
+
+        .carousel div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slick-prev:before,
+        .slick-next:before {
+            color: green;
+        }
+    </style>
+</head>
+
+<body>
+
+    {% include 'navbar.html' %}
+
+    <!-- Imagen principal -->
+    <div class="row">
+        <div class="container-fluid d-flex justify-content-center align-items-center"
+            style="height: 80vh; overflow: hidden;">
+            <img src="{{ url_for('static', filename='images/carrusel1.jpg') }}" class="img-fluid"
+                alt="Descripción de la imagen" style="max-height: 80vh; width: 100%; object-fit: cover;">
+        </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="container-fluid">
+        <h2 class="text-center mt-4">Ediciones</h2>
+        <div class="row justify-content-around">
+            <div class="col-lg-3 col-md-12 my-4">
+                <div class="card">
+                    <img src="{{ url_for('static',filename='images/garry_campeon.jpg' )}}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <p class="card-text">Nuestra primera edición contamos con una apasionante batalla de gallos y las
+                            actuaciones de: Kute, C.Royal, Eskaerre & Flekos, Basty Beam y D.Trankitenso & MdeMike.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-12 my-4">
+                <div class="card">
+                    <img src="{{ url_for('static',filename='images/fest3.jpg' )}}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <p class="card-text">En la segunda edición pudimos contar con nuestra particular batalla de nuevo
+                            y los sets de Dj de Dj Naxeete y Dj Vega.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-12 my-4">
+                <div class="card">
+                    <img src="{{ url_for('static',filename='images/carrusel3.jpg' )}}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <p class="card-text">Se aproxima la tercera edicion del Festival Al Loro, más renovada y con más ganas
+                            que nunca, ¿te la vas a perder?
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Patrocinadores</h1>
+        <div id="carouselPatrocinadores" class="carousel">
+            <div>
+                <img src="{{ url_for('static',filename='images/Citroen_Logo_2022.png' )}}" class="logo-size"
+                    alt="Patrocinador 1">
+            </div>
+            <div>
+                <img src="{{ url_for('static',filename='images/idealista.svg' )}}" class="logo-size"
+                    alt="Patrocinador 2">
+            </div>
+            <div>
+                <img src="{{ url_for('static',filename='images/dazn.png' )}}" class="logo-size" alt="Patrocinador 3">
+            </div>
+            <div>
+                <img src="{{ url_for('static',filename='images/axe.svg' )}}" class="logo-size" alt="Patrocinador 4">
+            </div>
+            <div>
+                <img src="{{ url_for('static',filename='images/druni.png' )}}" class="logo-size" alt="Patrocinador 5">
+            </div>
+            <div>
+                <img src="{{ url_for('static',filename='images/cornetto.png' )}}" class="logo-size"
+                    alt="Patrocinador 6">
+            </div>
+            <div>
+                <img src="{{ url_for('static',filename='images/redbull.png' )}}" class="logo-size" alt="Patrocinador 7">
+            </div>
+            <div>
+                <img src="{{ url_for('static',filename='images/mc.png' )}}" class="logo-size" alt="Patrocinador 8">
+            </div>
+            <!-- Añadir más elementos -->
+        </div>
+        <h2 class="text-center mt-5">¿Quieres ser patrocinador?</h2>
+        <h4 class="text-center my-4">Envíanos un correo a: <b style="color: green;">allorofestival@gmail.com</b></h4>
+    </div>
+
+    <!-- Lista spotify -->
+    <div class="container mt-5">
+        <h1 class="text-center">Escucha nuestra Playlist</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <iframe src="https://open.spotify.com/embed/playlist/1P0cNj7wKbmf9q7KVI2PwT?si=44411fa5c4274642"
+                    width="100%" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            </div>
+        </div>
+    </div>
+
+    {% include 'footer.html' %}
+
+    <script src="{{ url_for('static',filename='js/index.js' )}}"></script>
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+.form-control {
+    background: #e1e1e1;
+    margin: 8px 0;
+}
+
+.form-control:focus {
+    border-color: #16a085;
+    box-shadow: none;
+    background: #fff;
+}
+
+.btn-custom {
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 1.2em;
+    transition: background-color 0.3s;
+}
+
+.btn-custom:hover {
+    background-color: white;
+    border: 1px solid green;
+    color: green
+}
+
+.img-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.img-container img {
+    width: 100%;
+    filter: grayscale(100%);
+    transition: filter 0.3s ease;
+}
+
+.img-container img:hover {
+    filter: grayscale(0%);
+    transform: scale(1.1);
+}
+
+.img-title {
+    text-align: center;
+    margin-top: 10px;
+}

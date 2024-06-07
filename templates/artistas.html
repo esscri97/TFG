@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artistas</title>
+    <link rel="icon" href="{{url_for('static', filename='images/logo_byv.png')}}" type="image/x-icon">
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/artistas_style.css')}}">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <style>
+        
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+
+    <!-- Contenido -->
+    <div class="container mt-3">
+        <h2>Busca a tu artista favorito</h2>
+        <form action="/artistas" method="post">
+            <div class="form-group">
+                <label for="nombre_artista">Nombre del Artista:</label>
+                <input type="text" class="form-control" id="nombre_artista" name="nombre_artista" required>
+            </div>
+            <button type="submit" class="btn btn-success btn-block mb-5">Buscar</button>
+        </form>
+
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-6 col-md-4 mb-4">
+                <div class="img-container">
+                    <img src="{{ url_for('static',filename='images/eskaerre.jpg')}}" alt="Imagen 1">
+                </div>
+                <h3 class="img-title">Eskaerre</h3>
+            </div>
+            <div class="col-6 col-md-4 mb-4">
+                <div class="img-container">
+                    <img src="{{ url_for('static',filename='images/flekos.jpg')}}" alt="Imagen 2">
+                </div>
+                <h3 class="img-title">Flekos</h3>
+            </div>
+            <div class="col-6 col-md-4 mb-4">
+                <div class="img-container">
+                    <img src="{{ url_for('static',filename='images/basty.jpg')}}" alt="Imagen 3">
+                </div>
+                <h3 class="img-title">Basty Beam</h3>
+            </div>
+            <div class="col-6 col-md-4 mb-4">
+                <div class="img-container">
+                    <img src="{{ url_for('static',filename='images/dawe.jpg')}}" alt="Imagen 4">
+                </div>
+                <h3 class="img-title">Dawe Trankitenso</h3>
+            </div>
+            <div class="col-6 col-md-4 mb-4">
+                <div class="img-container">
+                    <img src="{{ url_for('static',filename='images/vega.jpg')}}" alt="Imagen 5">
+                </div>
+                <h3 class="img-title">Dj Vega</h3>
+            </div>
+            <div class="col-6 col-md-4 mb-4">
+                <div class="img-container">
+                    <img src="{{ url_for('static',filename='images/ej_art.jpg')}}" alt="Imagen 6">
+                </div>
+                <h3 class="img-title">C. Royal</h3>
+            </div>
+        </div>
+    </div>
+
+    {% include 'footer.html' %}
+</body>
+
+</html>
