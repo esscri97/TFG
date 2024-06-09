@@ -14,15 +14,19 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 # Configuración de la aplicación y la base de datos
-app.config['SECRET_KEY'] = config.HEX_SEC_KEY
-app.config['MYSQL_HOST'] = config.MYSQL_HOST
-app.config['MYSQL_USER'] = config.MYSQL_USER
-app.config['MYSQL_PASSWORD'] = config.MYSQL_PASSWORD
-app.config['MYSQL_DB'] = config.MYSQL_DB
-
-# Leer la URL de la base de datos desde la variable de entorno DATABASE_URL
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///local.db')
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST')
+app.config['MYSQL_USER'] = os.getenv('MYSQL_USER')
+app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD')
+app.config['MYSQL_DB'] = os.getenv('MYSQL_DB')
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/festival'  # Cambia según tu configuración de base de datos
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Configuración para subir archivos
+UPLOAD_FOLDER = 'static/images/productos'  # Carpeta donde se almacenarían las imágenes (no la usaremos en este caso)
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # Extensiones de archivo permitidas
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 db = SQLAlchemy(app)
 
 # Configuración para subir archivos
@@ -328,19 +332,11 @@ def producto(producto_id):
 
     return render_template('producto.html', product=product)
 
-
-
-
-
-
 @app.route('/carrito')
 def ver_carrito():
     carrito = session.get('carrito', [])
     total = sum(float(product[6]) * float(product[7]) for product in carrito) #arreglar
     return render_template('carrito.html', carrito=carrito, total=total, enumerate=enumerate)
-
-
-
 
 @app.route('/vaciar_carrito', methods=['POST'])
 def vaciar_carrito():
@@ -358,18 +354,6 @@ def eliminar_del_carrito():
         session.modified = True  # Asegurarse de que la sesión se guarde
         flash('Producto(s) eliminado(s) del carrito.', 'success')
     return redirect(url_for('ver_carrito'))
-
-
-
-
-
-
-#IMPORTANTE----------------
-# - Hacer el front bien
-# - Intentar consumir API spotify
-# - Preguntar a Maribel por pasarela de pago
-# - Hacer pag de usuario
-
 
 if __name__ == '__main__':
     app.run(debug=True)
