@@ -10,19 +10,55 @@ from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 
 
+
 app = Flask(__name__)
 
-# Cargar las variables de entorno desde el archivo .env
-load_dotenv()
+# Configuración de la base de datos PostgreSQL
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://festival_whtt_user:HghpwIHwamviE0xtak6vejdrehzI4wGe@dpg-cpiqqp21hbls73blh9f0-a.oregon-postgres.render.com/festival_whtt'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Configuración de la base de datos
-app.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST')
-app.config['MYSQL_USER'] = os.getenv('MYSQL_USER')
-app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD')
-app.config['MYSQL_DB'] = os.getenv('MYSQL_DB')
+# Inicializar la extensión SQLAlchemy
+db = SQLAlchemy(app)
 
-# Inicializar la extensión MySQL
-mysql = MySQL(app)
+# Configuración para subir archivos
+UPLOAD_FOLDER = 'static/images/productos'  # Carpeta donde se almacenarían las imágenes (no la usaremos en este caso)
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # Extensiones de archivo permitidas
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+if not os.path.exists(app.config['UPLOAD_FOLDER']):
+    os.makedirs(app.config['UPLOAD_FOLDER'])
+
+# Definir el modelo de usuario
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    rol = db.Column(db.String(50), nullable=False)
+
+# Define el modelo de producto
+class Producto(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    id_edicion = db.Column(db.Integer, db.ForeignKey('editions.id'), nullable=False)
+    nombre = db.Column(db.String(255), nullable=False)
+    imagen = db.Column(db.String(500), nullable=False)
+    cantidad = db.Column(db.Integer, nullable=False)
+    descripcion = db.Column(db.String(500), nullable=False)
+    precio = db.Column(db.Float, nullable=False)
+
+# Define el modelo de edición
+class Edition(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    year = db.Column(db.Integer, nullable=False)
+    products = db.relationship('Product', backref='edition', lazy=True)
+
+class Peticion(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    id_edicion = db.Column(db.Integer, nullable=False)
+    nombre = db.Column(db.String(255), nullable=False)
+    AKA = db.Column(db.String(255), nullable=False)
+    telefono = db.Column(db.String(20), nullable=False)
+    tipo = db.Column(db.String(50), nullable=False)
 
 # Configuración para subir archivos
 UPLOAD_FOLDER = 'static/images/productos'  # Carpeta donde se almacenarían las imágenes (no la usaremos en este caso)
@@ -51,16 +87,12 @@ def login():
         email = request.form['email']
         password = request.form['password']
 
-        cur = mysql.connection.cursor()
-        cur.execute('SELECT * FROM usuarios WHERE email = %s', (email,))
-        user = cur.fetchone()
-        cur.close()
+        user = User.query.filter_by(email=email).first()
 
-        if user is not None and bcrypt.checkpw(password.encode(), user[3].encode()):
+        if user is not None and bcrypt.checkpw(password.encode(), user.password.encode()):
             session['email'] = email
-            session['name'] = user[1]
-            # Aquí es donde deberías establecer el rol en la sesión
-            session['rol'] = user[4]
+            session['name'] = user.name
+            session['rol'] = user.rol
             return redirect(url_for('home'))
         else:
             return render_template('login.html', message='Las credenciales no son correctas')
@@ -70,7 +102,7 @@ def login():
 # Registro de Usuarios
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-     if request.method == 'POST':
+    if request.method == 'POST':
         name = request.form['name']
         email = request.form['email']
         password = request.form['password']
@@ -78,14 +110,12 @@ def register():
         hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
 
         if name and email and password:
-            cur = mysql.connection.cursor()
-            sql = 'INSERT INTO usuarios (nombre, email, password, rol) VALUES (%s, %s, %s, %s)'
-            data = (name, email, hashed_password.decode(), rol)
-            cur.execute(sql, data)
-            mysql.connection.commit()
+            user = User(name=name, email=email, password=hashed_password.decode(), rol=rol)
+            db.session.add(user)
+            db.session.commit()
 
         return redirect(url_for('login'))
-     elif request.method == 'GET':
+    elif request.method == 'GET':
         return render_template('register.html')
 
 # Ruta para cerrar sesión
@@ -186,18 +216,17 @@ def edicion3():
             return redirect('/edicion3')
 
         try:
-            cur = mysql.connection.cursor()
-            sql = 'INSERT INTO peticiones (id_edicion, nombre, AKA, telefono, tipo) VALUES (4, %s, %s, %s, %s)'
-            data = (nombre, aka, telefono, tipoArtista)
-            cur.execute(sql, data)
-            mysql.connection.commit()
+            # Crear una nueva instancia de Peticion
+            peticion = Peticion(id_edicion=4, nombre=nombre, AKA=aka, telefono=telefono, tipo=tipoArtista)
+            db.session.add(peticion)
+            db.session.commit()
             flash('Gracias por tu solicitud. ¡Nos pondremos en contacto contigo pronto!', 'success')
         except Exception as e:
-            mysql.connection.rollback()
+            db.session.rollback()
             flash('Hubo un error al enviar tu solicitud. Por favor, inténtalo de nuevo.', 'error')
             app.logger.error(f"Error al insertar en la base de datos: {str(e)}")
         finally:
-            cur.close()
+            db.session.close()
         
         return redirect('/edicion3')
 
@@ -223,7 +252,6 @@ def merchandising():
         descripcion = request.form['descripcion']
         precio = request.form['precio']
 
-        # Procesar la imagen y guardarla en la carpeta de carga de archivos
         if 'imagen' not in request.files:
             flash('No se proporcionó ninguna imagen', 'error')
             return redirect(request.url)
@@ -234,41 +262,22 @@ def merchandising():
             return redirect(request.url)
         if imagen and allowed_file(imagen.filename):
             filename = secure_filename(imagen.filename)
-            # Guardar el archivo en la carpeta de destino
             imagen.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            # Construir la URL de la imagen usando la ruta relativa
             imagen_url = filename
         else:
             flash('Formato de archivo no permitido', 'error')
             return redirect(request.url)
         
-        # Continuar con el resto de la lógica para insertar el producto en la base de datos
-        cur = mysql.connection.cursor()
-        cur.execute('INSERT INTO productos (id_edicion, nombre, imagen, cantidad, descripcion, precio) VALUES (%s, %s, %s, %s, %s, %s)', 
-            (edicion, nombre, imagen_url, cantidad, descripcion, precio))
-        mysql.connection.commit()
-        cur.close()
         return redirect(url_for('merchandising'))
     
     elif request.method == 'GET':
+        products = Producto.query.all()
         
         if 'rol' in session and session['rol'] == 'admin':
-            cur = mysql.connection.cursor()
-            cur.execute('SELECT * FROM productos')
-            products = cur.fetchall()
-            cur.close()
             return render_template('crud_merchan.html', products=products)
         elif 'rol' in session and session['rol'] == 'user':
-            cur = mysql.connection.cursor()
-            cur.execute('SELECT * FROM productos')
-            products = cur.fetchall()
-            cur.close()
             return render_template('merchandising.html', products=products)
         else:
-            cur = mysql.connection.cursor()
-            cur.execute('SELECT * FROM productos')
-            products = cur.fetchall()
-            cur.close()
             return render_template('merchandising.html', products=products)
 
 # Función para comprobar si la extensión del archivo es permitida
@@ -290,33 +299,44 @@ def edit_product(id):
     precio = request.form['precio']
 
     # Actualizar los detalles del producto en la base de datos
-    cur = mysql.connection.cursor()
-    cur.execute('UPDATE productos SET id_edicion = %s, nombre = %s, cantidad = %s, descripcion = %s, precio = %s WHERE id_producto = %s', 
-                (edicion, nombre, cantidad, descripcion, precio, id))
-    mysql.connection.commit()
-    cur.close()
+    product = Producto.query.get_or_404(id)
+    product.id_edicion = edicion
+    product.nombre = nombre
+    product.cantidad = cantidad
+    product.descripcion = descripcion
+    product.precio = precio
+    
+    try:
+        db.session.commit()
+        flash('Producto actualizado correctamente', 'success')
+    except:
+        db.session.rollback()
+        flash('Hubo un error al actualizar el producto', 'error')
+    
     return redirect(url_for('merchandising'))
 
-# Ruta para eliminar un producto de merchandising
 @app.route('/merchandising/delete/<int:id>', methods=['POST'])
 def delete_product(id):
-    cur = mysql.connection.cursor()
-    cur.execute('DELETE FROM productos WHERE id_producto = %s', (id,))
-    mysql.connection.commit()
-    cur.close()
+    product = Producto.query.get_or_404(id)
+    
+    try:
+        db.session.delete(product)
+        db.session.commit()
+        flash('Producto eliminado correctamente', 'success')
+    except:
+        db.session.rollback()
+        flash('Hubo un error al eliminar el producto', 'error')
+    
     return redirect(url_for('merchandising'))
 
 @app.route('/producto/<int:producto_id>', methods=['GET', 'POST'])
 def producto(producto_id):
-    cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM productos WHERE id_producto = %s', (producto_id,))
-    product = cur.fetchone()
-    cur.close()
+    product = Producto.query.get_or_404(producto_id)
 
     if request.method == 'POST':
         cantidad = int(request.form['cantidad'])
         talla = request.form.get('talla', 'S')
-        item = product + (cantidad, talla)  # Agregar la cantidad y la talla como últimos elementos de la tupla
+        item = (product.id, product.nombre, product.precio, cantidad, talla)
         carrito = session.get('carrito', [])
         carrito.append(item)
         session['carrito'] = carrito
