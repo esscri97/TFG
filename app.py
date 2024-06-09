@@ -6,6 +6,8 @@ import config
 import bcrypt
 from flask_mysqldb import MySQL #Necesario pip install flask_mysqldb
 import os
+from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
 
 
 
@@ -17,6 +19,11 @@ app.config['MYSQL_HOST'] = config.MYSQL_HOST
 app.config['MYSQL_USER'] = config.MYSQL_USER
 app.config['MYSQL_PASSWORD'] = config.MYSQL_PASSWORD
 app.config['MYSQL_DB'] = config.MYSQL_DB
+
+# Leer la URL de la base de datos desde la variable de entorno DATABASE_URL
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///local.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 
 # Configuración para subir archivos
 UPLOAD_FOLDER = 'static/images/productos'  # Carpeta donde se almacenarían las imágenes (no la usaremos en este caso)
