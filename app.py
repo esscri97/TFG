@@ -10,24 +10,19 @@ from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 
 
-
 app = Flask(__name__)
 
-# Configuración de la aplicación y la base de datos
-app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+# Cargar las variables de entorno desde el archivo .env
+load_dotenv()
+
+# Configuración de la base de datos
 app.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST')
 app.config['MYSQL_USER'] = os.getenv('MYSQL_USER')
 app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD')
 app.config['MYSQL_DB'] = os.getenv('MYSQL_DB')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/festival'  # Cambia según tu configuración de base de datos
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Configuración para subir archivos
-UPLOAD_FOLDER = 'static/images/productos'  # Carpeta donde se almacenarían las imágenes (no la usaremos en este caso)
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # Extensiones de archivo permitidas
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-db = SQLAlchemy(app)
+# Inicializar la extensión MySQL
+mysql = MySQL(app)
 
 # Configuración para subir archivos
 UPLOAD_FOLDER = 'static/images/productos'  # Carpeta donde se almacenarían las imágenes (no la usaremos en este caso)
@@ -39,8 +34,6 @@ if not os.path.exists(app.config['UPLOAD_FOLDER']):
 
 """ david97escriva@gmail.com
 Davidprueba """
-
-mysql = MySQL(app) # Para poder usar la bbdd (consultas, etc)
 
 @app.route('/', methods=['GET'])
 def home():
