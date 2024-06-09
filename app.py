@@ -9,8 +9,6 @@ import os
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 
-
-
 app = Flask(__name__)
 
 # Configuración de la base de datos PostgreSQL
@@ -19,14 +17,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Inicializar la extensión SQLAlchemy
 db = SQLAlchemy(app)
-
-# Configuración para subir archivos
-UPLOAD_FOLDER = 'static/images/productos'  # Carpeta donde se almacenarían las imágenes (no la usaremos en este caso)
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # Extensiones de archivo permitidas
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-if not os.path.exists(app.config['UPLOAD_FOLDER']):
-    os.makedirs(app.config['UPLOAD_FOLDER'])
 
 # Definir el modelo de usuario
 class User(db.Model):
@@ -39,7 +29,7 @@ class User(db.Model):
 # Define el modelo de producto
 class Producto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    id_edicion = db.Column(db.Integer, db.ForeignKey('editions.id'), nullable=False)
+    id_edicion = db.Column(db.Integer, db.ForeignKey('edition.id'), nullable=False)
     nombre = db.Column(db.String(255), nullable=False)
     imagen = db.Column(db.String(500), nullable=False)
     cantidad = db.Column(db.Integer, nullable=False)
@@ -50,7 +40,7 @@ class Producto(db.Model):
 class Edition(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     year = db.Column(db.Integer, nullable=False)
-    products = db.relationship('Product', backref='edition', lazy=True)
+    products = db.relationship('Producto', backref='edition', lazy=True)
 
 class Peticion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
