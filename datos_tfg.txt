@@ -1,2 +1,5 @@
 email admin: allorofestival@gmail.com
 password: AlloroFest2019.
+
+email prueba: prueba@gmail.com		
+password: Prueba1997.

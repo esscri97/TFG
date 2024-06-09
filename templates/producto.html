@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}{{ product[2] }}{% endblock %}
+
+{% block content %}
+{% include 'navbar.html' %}
+<div class="container mt-4">
+    <h2>{{ product[2] }}</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <img id="main-image" src="{{ url_for('static', filename='images/productos/' + product[3]) }}" class="img-fluid" alt="{{ product[2] }}">
+        </div>
+        <div class="col-md-6">
+            <h5>Precio: {{ product[6] }}€</h5>
+            <p>Descripción: {{ product[5] }}</p>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="cantidad">Cantidad</label>
+                    <input type="number" class="form-control" id="cantidad" name="cantidad" value="1" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="talla">Talla</label>
+                    <select class="form-control" id="talla" name="talla">
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                    </select>
+                </div>
+                <button class="btn btn-success mt-2">Añadir al Carrito</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% include 'footer.html' %}
+{% endblock %}

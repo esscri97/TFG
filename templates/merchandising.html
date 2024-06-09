@@ -2,8 +2,6 @@
 {% block title %}Merchandising{% endblock %}
 
 {% block content %}
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 {% include 'navbar.html' %}
 <div class="container mt-4">
     <h2>Productos de Merchandising</h2>
@@ -11,19 +9,16 @@
         {% for product in products %}
         <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
             <div class="card">
-                <img src="{{ url_for('static', filename='images/productos/' + product[3]) }}" class="card-img-top"
-                    alt="{{ product[2] }}">
+                <img src="{{ url_for('static', filename='images/productos/' + product[3]) }}" class="card-img-top" alt="{{ product[2] }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ product[2] }}</h5>
                     <p class="card-text">Precio: {{ product[6] }}€</p>
                     <p class="card-text">Descripción: {{ product[5] }}</p>
-                    {% if 'email' not in session %}
-                    <button class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom"
-                        title="Inicia sesión para poder comprar" disabled>Comprar</button>
-                    <div class="alert alert-danger mt-2" role="alert">Inicia sesión para poder comprar</div>
+                    {% if 'email' in session %}
+                        <a href="{{ url_for('producto', producto_id=product[0]) }}" class="btn btn-success">Ver Producto</a>
                     {% else %}
-                    <button class="btn btn-success btn-sm" data-toggle="tooltip" data-placement="bottom"
-                        title="Comprar">Comprar</button>
+                        <button class="btn btn-secondary" disabled>Ver Producto</button>
+                        <p class="text-danger mt-2">Inicia sesión para comprar</p>
                     {% endif %}
                 </div>
             </div>

@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Festival Al Loro</title>
     <link rel="icon" href="{{url_for('static', filename='images/logo_byv.png')}}" type="image/x-icon">
 
@@ -24,6 +23,10 @@
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
     <style>
+        body {
+            overflow-x: hidden; /* Evita el desplazamiento horizontal en todo el cuerpo */
+        }
+
         .logo-size {
             max-width: 200px;
             height: auto;
@@ -41,19 +44,38 @@
         .slick-next:before {
             color: green;
         }
+
+        .col-lg-3,
+        .col-md-12,
+        .card-img-top {
+            max-width: 100%;
+        }
+
+        .main-image-container {
+            height: 80vh;
+            width: 110vw;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Asegura que los botones de navegación sean visibles en dispositivos móviles */
+        .slick-prev,
+        .slick-next {
+            z-index: 1;
+        }
     </style>
 </head>
 
 <body>
-
     {% include 'navbar.html' %}
 
     <!-- Imagen principal -->
     <div class="row">
-        <div class="container-fluid d-flex justify-content-center align-items-center"
-            style="height: 80vh; overflow: hidden;">
-            <img src="{{ url_for('static', filename='images/carrusel1.jpg') }}" class="img-fluid"
-                alt="Descripción de la imagen" style="max-height: 80vh; width: 100%; object-fit: cover;">
+        <div class="container-fluid main-image-container">
+            <img src="{{ url_for('static', filename='images/carrusel1.jpg') }}" class="img-fluid img-fluid-full-width"
+                alt="Descripción de la imagen">
         </div>
     </div>
 

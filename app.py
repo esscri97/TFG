@@ -197,9 +197,13 @@ def edicion3():
         
         return redirect('/edicion3')
 
-@app.route('/contacto')
+@app.route('/contacto', methods=['GET', 'POST'])
 def contacto():
-    return render_template('contacto.html')
+    if request.method == 'POST':
+        # Procesar el formulario y enviar el correo electrónico
+        return redirect('https://formspree.io/allorofestival@gmail.com')
+    else:
+        return render_template('contacto.html')
 
 # Función para comprobar si la extensión del archivo es permitida
 def allowed_file(filename):
@@ -297,6 +301,59 @@ def delete_product(id):
     mysql.connection.commit()
     cur.close()
     return redirect(url_for('merchandising'))
+
+@app.route('/producto/<int:producto_id>', methods=['GET', 'POST'])
+def producto(producto_id):
+    cur = mysql.connection.cursor()
+    cur.execute('SELECT * FROM productos WHERE id_producto = %s', (producto_id,))
+    product = cur.fetchone()
+    cur.close()
+
+    if request.method == 'POST':
+        cantidad = int(request.form['cantidad'])
+        talla = request.form.get('talla', 'S')
+        item = product + (cantidad, talla)  # Agregar la cantidad y la talla como últimos elementos de la tupla
+        carrito = session.get('carrito', [])
+        carrito.append(item)
+        session['carrito'] = carrito
+        flash('Producto añadido al carrito.', 'success')
+        return redirect(url_for('ver_carrito'))
+
+    return render_template('producto.html', product=product)
+
+
+
+
+
+
+@app.route('/carrito')
+def ver_carrito():
+    carrito = session.get('carrito', [])
+    total = sum(float(product[6]) * float(product[7]) for product in carrito) #arreglar
+    return render_template('carrito.html', carrito=carrito, total=total, enumerate=enumerate)
+
+
+
+
+@app.route('/vaciar_carrito', methods=['POST'])
+def vaciar_carrito():
+    session.pop('carrito', None)
+    session.modified = True  # Asegurarse de que la sesión se guarde
+    flash('El carrito ha sido vaciado.', 'success')
+    return redirect(url_for('ver_carrito'))
+
+
+@app.route('/eliminar_del_carrito', methods=['POST'])
+def eliminar_del_carrito():
+    productos_a_eliminar = request.form.getlist('productos_a_eliminar')
+    if 'carrito' in session:
+        session['carrito'] = [producto for i, producto in enumerate(session['carrito']) if str(i) not in productos_a_eliminar]
+        session.modified = True  # Asegurarse de que la sesión se guarde
+        flash('Producto(s) eliminado(s) del carrito.', 'success')
+    return redirect(url_for('ver_carrito'))
+
+
+
 
 
 
