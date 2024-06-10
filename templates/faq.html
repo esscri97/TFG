@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Preguntas Frecuentes{% endblock %}
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<div class="container">
+    <h1 class="mt-5 mb-4 text-center">Preguntas Frecuentes</h1>
+  
+    <div class="accordion" id="accordionExample">
+      <div class="card">
+        <div class="card-header" id="headingOne">
+          <h2 class="mb-0">
+            <button class="btn btn-link text-dark" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              ¿Cuándo se celebra el festival?
+            </button>
+          </h2>
+        </div>
+  
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+          <div class="card-body">
+            El festival se celebra cada año durante el mes de agosto, generalmente será la última o penúltima semana. La duración del mismo es de un único día.
+          </div>
+        </div>
+      </div>
+  
+      <div class="card">
+        <div class="card-header" id="headingTwo">
+          <h2 class="mb-0">
+            <button class="btn btn-link text-dark collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              ¿Dónde se lleva a cabo el festival?
+            </button>
+          </h2>
+        </div>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+          <div class="card-body">
+            El festival se lleva a cabo en la plaza principal del pueblo de Valdeaveruelo, en Guadalajara (España).
+          </div>
+        </div>
+      </div>
+  
+      <div class="card">
+        <div class="card-header" id="headingThree">
+          <h2 class="mb-0">
+            <button class="btn btn-link text-dark collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+              ¿Qué tipo de artistas participan en el festival?
+            </button>
+          </h2>
+        </div>
+        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+          <div class="card-body">
+            El festival presenta una amplia variedad de artistas, suelen ser artistas del género urbano y de ámbito local.
+          </div>
+        </div>
+      </div>
+  
+      <div class="card">
+        <div class="card-header" id="headingFour">
+          <h2 class="mb-0">
+            <button class="btn btn-link text-dark collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+              ¿Dónde puedo comprar merchandising del festival?
+            </button>
+          </h2>
+        </div>
+        <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
+          <div class="card-body">
+            El merchandising del festival se puede adquirir en varios puntos de venta dentro del recinto, así como en la tienda online oficial del festival.
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </div>
+
+{% include 'footer.html' %}
+{% endblock %}

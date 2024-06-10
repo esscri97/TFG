@@ -338,6 +338,26 @@ def delete_product(id):
     db.session.commit()
     return redirect(url_for('merchandising'))
 
+@app.route('/avisolegal', methods=['GET'])
+def avisolegal():
+    return render_template('aviso-legal.html')
+
+@app.route('/privacidad', methods=['GET'])
+def privacidad():
+    return render_template('privacidad.html')
+
+@app.route('/terminos', methods=['GET'])
+def terminos():
+    return render_template('terminos.html')
+
+@app.route('/trabaja', methods=['GET'])
+def trabaja():
+    return render_template('trabaja.html')
+
+@app.route('/faq', methods=['GET'])
+def faq():
+    return render_template('faq.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
