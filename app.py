@@ -15,7 +15,7 @@ load_dotenv()
 # Configuración de la base de datos PostgreSQL
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+app.config['SECRET_KEY'] = 'secret'
 # Inicializar la extensión SQLAlchemy
 db = SQLAlchemy(app)
 
