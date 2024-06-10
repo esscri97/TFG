@@ -279,7 +279,7 @@ def producto(producto_id):
         flash('Producto añadido al carrito.', 'success')
         return redirect(url_for('ver_carrito'))
 
-    return render_template('producto.html', product=producto)  # Pasar el objeto Producto directamente al template
+    return render_template('producto.html', product=producto)
 
 @app.route('/carrito')
 def ver_carrito():
@@ -292,11 +292,6 @@ def ver_carrito():
         total += subtotal
         productos_en_carrito.append({'producto': producto, 'cantidad': item['cantidad'], 'subtotal': subtotal})
     return render_template('carrito.html', carrito=productos_en_carrito, total=total)
-
-
-
-
-
 
 
 @app.route('/vaciar_carrito', methods=['POST'])
