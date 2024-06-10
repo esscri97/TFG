@@ -236,11 +236,90 @@ def merchandising():
             flash('Formato de archivo no permitido', 'error')
             return redirect(request.url)
         
+        # Continuar con el resto de la lógica para insertar el producto en la base de datos
+        producto = Producto(id_edicion=edicion, nombre=nombre, imagen=imagen_url, cantidad=cantidad, descripcion=descripcion, precio=precio)
+        db.session.add(producto)
+        db.session.commit()
+        
         return redirect(url_for('merchandising'))
     
     elif request.method == 'GET':
-        productos = Producto.query.all()
-        return render_template('merchandising.html', productos=productos)
+        if 'rol' in session and session['rol'] == 'admin':
+            productos = Producto.query.all()
+            return render_template('crud_merchan.html', productos=productos)
+        else:
+            productos = Producto.query.all()
+            return render_template('merchandising.html', productos=productos)
+
+
+@app.route('/producto/<int:producto_id>', methods=['GET', 'POST'])
+def producto(producto_id):
+    producto = Producto.query.get_or_404(producto_id)
+
+    if request.method == 'POST':
+        cantidad = int(request.form['cantidad'])
+        talla = request.form.get('talla', 'S')
+        item = producto + (cantidad, talla)  # Agregar la cantidad y la talla como últimos elementos de la tupla
+        carrito = session.get('carrito', [])
+        carrito.append(item)
+        session['carrito'] = carrito
+        flash('Producto añadido al carrito.', 'success')
+        return redirect(url_for('ver_carrito'))
+
+    return render_template('producto.html', product=producto)
+
+
+@app.route('/carrito')
+def ver_carrito():
+    carrito = session.get('carrito', [])
+    total = sum(float(product[6]) * float(product[7]) for product in carrito) #arreglar
+    return render_template('carrito.html', carrito=carrito, total=total, enumerate=enumerate)
+
+
+@app.route('/vaciar_carrito', methods=['POST'])
+def vaciar_carrito():
+    session.pop('carrito', None)
+    session.modified = True  # Asegurarse de que la sesión se guarde
+    flash('El carrito ha sido vaciado.', 'success')
+    return redirect(url_for('ver_carrito'))
+
+
+@app.route('/eliminar_del_carrito', methods=['POST'])
+def eliminar_del_carrito():
+    productos_a_eliminar = request.form.getlist('productos_a_eliminar')
+    if 'carrito' in session:
+        session['carrito'] = [producto for i, producto in enumerate(session['carrito']) if str(i) not in productos_a_eliminar]
+        session.modified = True  # Asegurarse de que la sesión se guarde
+        flash('Producto(s) eliminado(s) del carrito.', 'success')
+    return redirect(url_for('ver_carrito'))
+
+
+@app.route('/merchandising/edit/<int:id>', methods=['POST'])
+def edit_product(id):
+    producto = Producto.query.get_or_404(id)
+    edicion = request.form['id_edicion']
+    nombre = request.form['nombre']
+    cantidad = request.form['cantidad']
+    descripcion = request.form['descripcion']
+    precio = request.form['precio']
+
+    producto.id_edicion = edicion
+    producto.nombre = nombre
+    producto.cantidad = cantidad
+    producto.descripcion = descripcion
+    producto.precio = precio
+
+    db.session.commit()
+    return redirect(url_for('merchandising'))
+
+
+@app.route('/merchandising/delete/<int:id>', methods=['POST'])
+def delete_product(id):
+    producto = Producto.query.get_or_404(id)
+    db.session.delete(producto)
+    db.session.commit()
+    return redirect(url_for('merchandising'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)
