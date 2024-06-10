@@ -52,6 +52,12 @@ class Producto(db.Model):
             'precio': self.precio
         }
 
+    def restar_cantidad(self, cantidad_comprada):
+        if self.cantidad >= cantidad_comprada:
+            self.cantidad -= cantidad_comprada
+        else:
+            raise ValueError('No hay suficiente stock del producto.')
+
 class Edition(db.Model):
     __tablename__ = 'ediciones'
     id_edicion = db.Column(db.Integer, primary_key=True)
@@ -337,6 +343,27 @@ def delete_product(id):
     db.session.delete(producto)
     db.session.commit()
     return redirect(url_for('merchandising'))
+
+@app.route('/comprar', methods=['POST'])
+def comprar():
+    carrito = session.get('carrito', [])
+    try:
+        for item in carrito:
+            producto = Producto.query.get_or_404(item['producto_id'])
+            producto.restar_cantidad(item['cantidad'])
+        
+        db.session.commit()
+        session.pop('carrito', None)  # Vaciamos el carrito después de la compra
+        flash('Compra realizada con éxito.', 'success')
+    except ValueError as e:
+        db.session.rollback()
+        flash(str(e), 'danger')
+    except Exception as e:
+        db.session.rollback()
+        flash('Ocurrió un error al procesar la compra.', 'danger')
+    
+    return render_template('carrito.html')
+
 
 @app.route('/avisolegal', methods=['GET'])
 def avisolegal():

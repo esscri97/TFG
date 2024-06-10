@@ -77,7 +77,9 @@
         <form method="POST" action="{{ url_for('vaciar_carrito') }}">
             <button class="btn btn-danger mt-2">Vaciar Carrito</button>
         </form>
-        <a href="https://www.paypal.com/es/home" target="_blank"><button class="btn btn-success mt-2" >Comprar</button></a>
+        <form method="POST" action="{{ url_for('comprar') }}">
+            <button class="btn btn-success mt-2">Comprar</button>
+        </form>
         {% else %}
         <p>Tu carrito está vacío.</p>
         {% endif %}
