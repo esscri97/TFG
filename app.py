@@ -82,7 +82,7 @@ def login():
 
         if user is not None and bcrypt.checkpw(password.encode(), user.password.encode()):
             session['email'] = email
-            session['name'] = user.name
+            session['nombre'] = user.nombre  # Aquí corregimos el atributo a 'nombre'
             session['rol'] = user.rol
             return redirect(url_for('home'))
         else:
