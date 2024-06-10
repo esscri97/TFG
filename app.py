@@ -273,8 +273,8 @@ def producto(producto_id):
 @app.route('/carrito')
 def ver_carrito():
     carrito = session.get('carrito', [])
-    total = sum(float(product[6]) * float(product[7]) for product in carrito) #arreglar
-    return render_template('carrito.html', carrito=carrito, total=total, enumerate=enumerate)
+    total = sum(float(product.precio) * float(product.cantidad) for product in carrito)
+    return render_template('carrito.html', carrito=carrito, total=total)
 
 
 @app.route('/vaciar_carrito', methods=['POST'])
