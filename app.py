@@ -23,10 +23,11 @@ db = SQLAlchemy(app)
 class User(db.Model):
     __tablename__ = 'usuarios'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(155), nullable=False)
+    nombre = db.Column(db.String(155), nullable=False)
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     rol = db.Column(db.String(100), nullable=False)
+
 
 # Define el modelo de producto
 class Producto(db.Model):
