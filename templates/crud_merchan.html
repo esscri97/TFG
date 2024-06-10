@@ -12,15 +12,15 @@
         {% for product in products %}
         <div class="col-lg-3 col-md-4 col-sm-6 mb-3">
             <div class="card">
-                <img src="{{ url_for('static', filename='images/productos/' + product[3]) }}" class="card-img-top" alt="{{ product[2] }}">
+                <img src="{{ url_for('static', filename='images/productos/' + product.imagen) }}" class="card-img-top" alt="{{ product.nombre }}">
                 <div class="card-body">
-                    <h5 class="card-title">{{ product[2] }}</h5>
-                    <p class="card-text">Cantidad: {{ product[4] }}</p>
-                    <p class="card-text"><small class="text-muted">Precio: {{ product[6] }}</small></p>
-                    <p class="card-text"><small class="text-muted">Descripcion: {{ product[5] }}</small></p>
+                    <h5 class="card-title">{{ product.nombre }}</h5>
+                    <p class="card-text">Cantidad: {{ product.cantidad }}</p>
+                    <p class="card-text"><small class="text-muted">Precio: {{ product.precio }}</small></p>
+                    <p class="card-text"><small class="text-muted">Descripcion: {{ product.descripcion }}</small></p>
                     <button class="btn btn-warning" data-toggle="modal"
-                        data-target="#editProductModal{{ product[0] }}">Editar</button>
-                    <form action="{{ url_for('delete_product', id=product[0]) }}" method="POST" class="d-inline">
+                        data-target="#editProductModal{{ product.id_producto }}">Editar</button>
+                    <form action="{{ url_for('delete_product', id=product.id_producto) }}" method="POST" class="d-inline">
                         <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form>
                 </div>
