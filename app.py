@@ -272,20 +272,22 @@ def producto(producto_id):
     if request.method == 'POST':
         cantidad = int(request.form['cantidad'])
         talla = request.form.get('talla', 'S')
-        item = {'producto': producto, 'cantidad': cantidad, 'talla': talla}  # Utilizar el objeto Producto directamente
+        item = {'producto': producto, 'cantidad': cantidad, 'talla': talla}  # Almacenar el objeto Producto directamente
         carrito = session.get('carrito', [])
         carrito.append(item)
         session['carrito'] = carrito
         flash('Producto añadido al carrito.', 'success')
         return redirect(url_for('ver_carrito'))
 
-    return render_template('producto.html', product=producto.to_dict())  # Utilizar to_dict() para convertir el producto en un diccionario
+    return render_template('producto.html', product=producto)  # Pasar el objeto Producto directamente al template
+
 
 @app.route('/carrito')
 def ver_carrito():
     carrito = session.get('carrito', [])
     total = sum(float(item['producto'].precio) * float(item['cantidad']) for item in carrito)
     return render_template('carrito.html', carrito=carrito, total=total)
+
 
 
 
