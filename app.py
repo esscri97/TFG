@@ -2,10 +2,8 @@ from flask import Flask, render_template, url_for, request, session, redirect, f
 import os
 from werkzeug.utils import secure_filename
 import requests
-import config
 import bcrypt
-from flask_mysqldb import MySQL #Necesario pip install flask_mysqldb
-import os
+from flask_mysqldb import MySQL  # Necesario pip install flask_mysqldb
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 
@@ -31,38 +29,37 @@ class User(db.Model):
 
 # Define el modelo de producto
 class Producto(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    id_edicion = db.Column(db.Integer, db.ForeignKey('edition.id'), nullable=False)
+    __tablename__ = 'productos'
+    id_producto = db.Column(db.Integer, primary_key=True)
+    id_edicion = db.Column(db.Integer, db.ForeignKey('ediciones.id_edicion'), nullable=False)
     nombre = db.Column(db.String(255), nullable=False)
     imagen = db.Column(db.String(500), nullable=False)
     cantidad = db.Column(db.Integer, nullable=False)
     descripcion = db.Column(db.String(500), nullable=False)
     precio = db.Column(db.Float, nullable=False)
 
-# Define el modelo de edición
 class Edition(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    year = db.Column(db.Integer, nullable=False)
-    products = db.relationship('Producto', backref='edition', lazy=True)
+    __tablename__ = 'ediciones'
+    id_edicion = db.Column(db.Integer, primary_key=True)
+    anyo = db.Column(db.Integer, nullable=False)
+    products = db.relationship('Producto', backref='edicion', lazy=True)
 
 class Peticion(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    __tablename__ = 'peticiones'
+    id_peticion = db.Column(db.Integer, primary_key=True)
     id_edicion = db.Column(db.Integer, nullable=False)
     nombre = db.Column(db.String(255), nullable=False)
-    AKA = db.Column(db.String(255), nullable=False)
+    aka = db.Column(db.String(255), nullable=False)
     telefono = db.Column(db.String(20), nullable=False)
     tipo = db.Column(db.String(50), nullable=False)
 
 # Configuración para subir archivos
-UPLOAD_FOLDER = 'static/images/productos'  # Carpeta donde se almacenarían las imágenes (no la usaremos en este caso)
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # Extensiones de archivo permitidas
+UPLOAD_FOLDER = 'static/images/productos'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 if not os.path.exists(app.config['UPLOAD_FOLDER']):
     os.makedirs(app.config['UPLOAD_FOLDER'])
-
-""" david97escriva@gmail.com
-Davidprueba """
 
 @app.route('/', methods=['GET'])
 def home():
@@ -72,7 +69,6 @@ def home():
 def aboutus():
     return render_template('aboutus.html')
 
-    
 # Login de usuarios
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -114,21 +110,15 @@ def register():
 # Ruta para cerrar sesión
 @app.route('/logout')
 def logout():
-    # Eliminar todas las variables de sesión
     session.clear()
-    # Redirigir a la página de inicio
     return redirect(url_for('home'))
 
 # Define la ruta para manejar la búsqueda de artistas
 @app.route('/artistas', methods=['POST', 'GET'])
 def buscar_artista():
     if request.method == 'POST':
-        # Obtiene el nombre del artista desde el formulario
         nombre_artista = request.form['nombre_artista']
-        
-        # Llama a la función para obtener información del artista desde Spotify
         info_artista = obtener_informacion_artista(nombre_artista)
-        
         if info_artista:
             return render_template('resultado_artista.html', info_artista=info_artista)
         else:
@@ -137,35 +127,27 @@ def buscar_artista():
         return render_template('artistas.html')
 
 def obtener_informacion_artista(nombre_artista):
-    # Define tu client_id y client_secret de Spotify
     client_id = '00c2a60a76ac41f39d30afefccc5ddf2'
     client_secret = '797983182a9f4160b34c98d69eca0b2c'
     
-    # Realiza la solicitud de autorización
     auth_response = requests.post('https://accounts.spotify.com/api/token', {
         'grant_type': 'client_credentials',
         'client_id': client_id,
         'client_secret': client_secret,
     })
     
-    # Verifica si la autenticación fue exitosa
     if auth_response.status_code != 200:
         print("Error de autenticación:", auth_response.text)
         return None
     
-    # Obtiene el token de acceso
     access_token = auth_response.json().get('access_token')
     
     if not access_token:
         print("No se pudo obtener el token de acceso.")
         return None
     
-    # Configura los headers para la solicitud de búsqueda de artista
-    headers = {
-        'Authorization': f'Bearer {access_token}'
-    }
+    headers = {'Authorization': f'Bearer {access_token}'}
     
-    # Realiza la solicitud para buscar el artista
     response = requests.get('https://api.spotify.com/v1/search', 
                             headers=headers, 
                             params={'q': nombre_artista, 'type': 'artist'})
@@ -174,14 +156,11 @@ def obtener_informacion_artista(nombre_artista):
         print("Error en la solicitud de búsqueda:", response.text)
         return None
     
-    # Verifica si se encontraron artistas
     data = response.json()
     if 'artists' not in data or not data['artists']['items']:
         return None
     
-    # Obtiene la información del primer artista encontrado
     artist_info = data['artists']['items'][0]
-    
     return artist_info
 
 @app.route('/edicion1')
@@ -197,20 +176,17 @@ def edicion3():
     if request.method == 'GET':
         return render_template('edicion3.html')
     elif request.method == 'POST':
-        # Obtener datos del formulario
         nombre = request.form['nombre']
         tipoArtista = request.form['tipoArtista']
         aka = request.form['aka']
         telefono = request.form['telefono']
 
-        # Validar los datos
         if not nombre or not tipoArtista or not aka or not telefono:
             flash('Por favor, complete todos los campos.', 'error')
             return redirect('/edicion3')
 
         try:
-            # Crear una nueva instancia de Peticion
-            peticion = Peticion(id_edicion=4, nombre=nombre, AKA=aka, telefono=telefono, tipo=tipoArtista)
+            peticion = Peticion(id_edicion=4, nombre=nombre, aka=aka, telefono=telefono, tipo=tipoArtista)
             db.session.add(peticion)
             db.session.commit()
             flash('Gracias por tu solicitud. ¡Nos pondremos en contacto contigo pronto!', 'success')
@@ -226,16 +202,13 @@ def edicion3():
 @app.route('/contacto', methods=['GET', 'POST'])
 def contacto():
     if request.method == 'POST':
-        # Procesar el formulario y enviar el correo electrónico
         return redirect('https://formspree.io/allorofestival@gmail.com')
     else:
         return render_template('contacto.html')
 
-# Función para comprobar si la extensión del archivo es permitida
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# Ruta para manejar el merchandising (obtener, añadir, editar y eliminar productos)
 @app.route('/merchandising', methods=['GET', 'POST'])
 def merchandising():
     if request.method == 'POST':
@@ -264,102 +237,8 @@ def merchandising():
         return redirect(url_for('merchandising'))
     
     elif request.method == 'GET':
-        products = Producto.query.all()
-        
-        if 'rol' in session and session['rol'] == 'admin':
-            return render_template('crud_merchan.html', products=products)
-        elif 'rol' in session and session['rol'] == 'user':
-            return render_template('merchandising.html', products=products)
-        else:
-            return render_template('merchandising.html', products=products)
-
-# Función para comprobar si la extensión del archivo es permitida
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-# Ruta para mostrar la imagen cargada
-@app.route('/productos/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-
-# Ruta para editar un producto de merchandising
-@app.route('/merchandising/edit/<int:id>', methods=['POST'])
-def edit_product(id):
-    edicion = request.form['id_edicion']
-    nombre = request.form['nombre']
-    cantidad = request.form['cantidad']
-    descripcion = request.form['descripcion']
-    precio = request.form['precio']
-
-    # Actualizar los detalles del producto en la base de datos
-    product = Producto.query.get_or_404(id)
-    product.id_edicion = edicion
-    product.nombre = nombre
-    product.cantidad = cantidad
-    product.descripcion = descripcion
-    product.precio = precio
-    
-    try:
-        db.session.commit()
-        flash('Producto actualizado correctamente', 'success')
-    except:
-        db.session.rollback()
-        flash('Hubo un error al actualizar el producto', 'error')
-    
-    return redirect(url_for('merchandising'))
-
-@app.route('/merchandising/delete/<int:id>', methods=['POST'])
-def delete_product(id):
-    product = Producto.query.get_or_404(id)
-    
-    try:
-        db.session.delete(product)
-        db.session.commit()
-        flash('Producto eliminado correctamente', 'success')
-    except:
-        db.session.rollback()
-        flash('Hubo un error al eliminar el producto', 'error')
-    
-    return redirect(url_for('merchandising'))
-
-@app.route('/producto/<int:producto_id>', methods=['GET', 'POST'])
-def producto(producto_id):
-    product = Producto.query.get_or_404(producto_id)
-
-    if request.method == 'POST':
-        cantidad = int(request.form['cantidad'])
-        talla = request.form.get('talla', 'S')
-        item = (product.id, product.nombre, product.precio, cantidad, talla)
-        carrito = session.get('carrito', [])
-        carrito.append(item)
-        session['carrito'] = carrito
-        flash('Producto añadido al carrito.', 'success')
-        return redirect(url_for('ver_carrito'))
-
-    return render_template('producto.html', product=product)
-
-@app.route('/carrito')
-def ver_carrito():
-    carrito = session.get('carrito', [])
-    total = sum(float(product[6]) * float(product[7]) for product in carrito) #arreglar
-    return render_template('carrito.html', carrito=carrito, total=total, enumerate=enumerate)
-
-@app.route('/vaciar_carrito', methods=['POST'])
-def vaciar_carrito():
-    session.pop('carrito', None)
-    session.modified = True  # Asegurarse de que la sesión se guarde
-    flash('El carrito ha sido vaciado.', 'success')
-    return redirect(url_for('ver_carrito'))
-
-
-@app.route('/eliminar_del_carrito', methods=['POST'])
-def eliminar_del_carrito():
-    productos_a_eliminar = request.form.getlist('productos_a_eliminar')
-    if 'carrito' in session:
-        session['carrito'] = [producto for i, producto in enumerate(session['carrito']) if str(i) not in productos_a_eliminar]
-        session.modified = True  # Asegurarse de que la sesión se guarde
-        flash('Producto(s) eliminado(s) del carrito.', 'success')
-    return redirect(url_for('ver_carrito'))
+        productos = Producto.query.all()
+        return render_template('merchandising.html', productos=productos)
 
 if __name__ == '__main__':
     app.run(debug=True)
