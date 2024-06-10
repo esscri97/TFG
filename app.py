@@ -11,8 +11,11 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
+# Cargar variables de entorno
+load_dotenv()
+
 # Configuración de la base de datos PostgreSQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://festival_whtt_user:HghpwIHwamviE0xtak6vejdrehzI4wGe@dpg-cpiqqp21hbls73blh9f0-a.oregon-postgres.render.com/festival_whtt'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Inicializar la extensión SQLAlchemy
