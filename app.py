@@ -281,7 +281,7 @@ def producto(producto_id):
 
     return render_template('producto.html', product=producto)  # Pasar el objeto Producto directamente al template
 
-
+@app.route('/carrito')
 def ver_carrito():
     carrito = session.get('carrito', [])
     productos_en_carrito = []
