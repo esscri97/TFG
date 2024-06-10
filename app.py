@@ -376,7 +376,7 @@ def comprar():
 @app.route('/compra-gracias')
 def compra_gracias():
     paypal_url = request.args.get('paypal_url', '#')
-    return render_template('compra-gracias.html', paypal_url=paypal_url)
+    return render_template('gracias-compra.html', paypal_url=paypal_url)
 
 
 @app.route('/avisolegal', methods=['GET'])
