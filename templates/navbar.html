@@ -41,7 +41,8 @@
             {% if 'carrito' in session %}
             <a class="btn btn-custom w-17 btn mr-3" href="/carrito">
                 <img src="{{ url_for('static',filename='images/carrito-de-compras.png')}}" alt="carrito" width="20px"></i> <span class="badge badge-dark">
-                    {{ session['carrito'] | sum(attribute='7') }}
+                    {{ session['carrito'] | sum(attribute='cantidad') }}
+
                 </span>
             </a>
             {% endif %}
