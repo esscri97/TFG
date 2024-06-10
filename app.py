@@ -359,11 +359,8 @@ def comprar():
         db.session.commit()
         session.pop('carrito', None)  # Vaciamos el carrito después de la compra
         
-        # Aquí redirigimos a PayPal
-        paypal_url = f"https://www.paypal.com/es/home"
-        
-        # Mostrar la página de agradecimiento
-        return redirect(url_for('compra_gracias', paypal_url=paypal_url))
+        # Redirigir a la página de agradecimiento
+        return redirect(url_for('compra_gracias'))
     except ValueError as e:
         db.session.rollback()
         flash(str(e), 'danger')
@@ -375,8 +372,7 @@ def comprar():
 
 @app.route('/compra-gracias')
 def compra_gracias():
-    paypal_url = request.args.get('paypal_url', '#')
-    return render_template('gracias-compra.html', paypal_url=paypal_url)
+    return render_template('gracias-compra.html')
 
 
 @app.route('/avisolegal', methods=['GET'])

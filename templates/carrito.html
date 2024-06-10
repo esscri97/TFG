@@ -77,7 +77,7 @@
         <form method="POST" action="{{ url_for('vaciar_carrito') }}">
             <button class="btn btn-danger mt-2">Vaciar Carrito</button>
         </form>
-        <form method="POST" action="{{ url_for('comprar') }}">
+        <form method="POST" action="{{ url_for('comprar') }}" id="compraForm" onsubmit="return handlePurchase()">
             <button class="btn btn-success mt-2">Comprar</button>
         </form>
         {% else %}
@@ -85,6 +85,15 @@
         {% endif %}
     </div>
     {% include 'footer.html' %}
+
+    <script>
+        function handlePurchase() {
+            // Abrir la página de PayPal en una nueva pestaña
+            window.open('https://www.paypal.com/es/home', '_blank');
+            // Dejar que el formulario se envíe y redirija a la página de agradecimiento
+            return true;
+        }
+    </script>
 </body>
 
 </html>
