@@ -347,14 +347,23 @@ def delete_product(id):
 @app.route('/comprar', methods=['POST'])
 def comprar():
     carrito = session.get('carrito', [])
+    total = 0
     try:
+        # Calcular el total y restar las cantidades
         for item in carrito:
             producto = Producto.query.get_or_404(item['producto_id'])
             producto.restar_cantidad(item['cantidad'])
+            subtotal = float(producto.precio) * float(item['cantidad'])
+            total += subtotal
         
         db.session.commit()
         session.pop('carrito', None)  # Vaciamos el carrito después de la compra
-        flash('Compra realizada con éxito.', 'success')
+        
+        # Aquí redirigimos a PayPal
+        paypal_url = f"https://www.paypal.com/es/home"
+        
+        # Mostrar la página de agradecimiento
+        return redirect(url_for('compra_gracias', paypal_url=paypal_url))
     except ValueError as e:
         db.session.rollback()
         flash(str(e), 'danger')
@@ -362,7 +371,12 @@ def comprar():
         db.session.rollback()
         flash('Ocurrió un error al procesar la compra.', 'danger')
     
-    return render_template('carrito.html')
+    return redirect(url_for('ver_carrito'))
+
+@app.route('/compra-gracias')
+def compra_gracias():
+    paypal_url = request.args.get('paypal_url', '#')
+    return render_template('compra-gracias.html', paypal_url=paypal_url)
 
 
 @app.route('/avisolegal', methods=['GET'])
