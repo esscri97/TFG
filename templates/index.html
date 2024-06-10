@@ -52,18 +52,35 @@
         }
 
         .main-image-container {
-            height: 80vh;
-            width: 110vw;
+            height: 70vh;
+            /* Ajusta la altura según tus necesidades */
+            width: 100%;
+            /* Ajusta el ancho al 100% para ocupar todo el ancho del contenedor */
             overflow: hidden;
+            /* Oculta cualquier parte de la imagen que se desborde del contenedor */
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+
+        .img-fluid-full-width {
+            width: 100%;
+            /* Ajusta el ancho de la imagen al 100% del contenedor */
+            height: auto;
+            /* Mantiene la proporción de la imagen */
         }
 
         /* Asegura que los botones de navegación sean visibles en dispositivos móviles */
         .slick-prev,
         .slick-next {
             z-index: 1;
+        }
+
+        @media only screen and (max-width: 767px) {
+            .main-image-container {
+                height: 30vh;
+                /* Ajusta la altura según tus necesidades */
+            }
         }
     </style>
 </head>
