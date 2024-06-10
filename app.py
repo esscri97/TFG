@@ -260,7 +260,7 @@ def producto(producto_id):
     if request.method == 'POST':
         cantidad = int(request.form['cantidad'])
         talla = request.form.get('talla', 'S')
-        item = (producto, cantidad, talla)  # Crear una tupla con el producto, la cantidad y la talla
+        item = {'producto': producto, 'cantidad': cantidad, 'talla': talla}  # Crear un diccionario con los datos del producto
         carrito = session.get('carrito', [])
         carrito.append(item)
         session['carrito'] = carrito
@@ -269,14 +269,11 @@ def producto(producto_id):
 
     return render_template('producto.html', product=producto)
 
-
-
 @app.route('/carrito')
 def ver_carrito():
     carrito = session.get('carrito', [])
-    total = sum(float(product.precio) * float(product.cantidad) for product in carrito)
+    total = sum(float(item['producto'].precio) * float(item['cantidad']) for item in carrito)
     return render_template('carrito.html', carrito=carrito, total=total)
-
 
 @app.route('/vaciar_carrito', methods=['POST'])
 def vaciar_carrito():
