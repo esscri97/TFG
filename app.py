@@ -260,7 +260,7 @@ def producto(producto_id):
     if request.method == 'POST':
         cantidad = int(request.form['cantidad'])
         talla = request.form.get('talla', 'S')
-        item = producto + (cantidad, talla)  # Agregar la cantidad y la talla como últimos elementos de la tupla
+        item = (producto, cantidad, talla)  # Crear una tupla con el producto, la cantidad y la talla
         carrito = session.get('carrito', [])
         carrito.append(item)
         session['carrito'] = carrito
@@ -268,6 +268,7 @@ def producto(producto_id):
         return redirect(url_for('ver_carrito'))
 
     return render_template('producto.html', product=producto)
+
 
 
 @app.route('/carrito')
