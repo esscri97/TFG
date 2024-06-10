@@ -100,7 +100,7 @@ def register():
         hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
 
         if name and email and password:
-            user = User(name=name, email=email, password=hashed_password.decode(), rol=rol)
+            user = User(nombre=name, email=email, password=hashed_password.decode(), rol=rol)
             db.session.add(user)
             db.session.commit()
 
