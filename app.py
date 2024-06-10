@@ -292,6 +292,8 @@ def ver_carrito():
 
 
 
+
+
 @app.route('/vaciar_carrito', methods=['POST'])
 def vaciar_carrito():
     session.pop('carrito', None)
