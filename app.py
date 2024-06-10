@@ -272,7 +272,7 @@ def producto(producto_id):
     if request.method == 'POST':
         cantidad = int(request.form['cantidad'])
         talla = request.form.get('talla', 'S')
-        item = {'producto': producto, 'cantidad': cantidad, 'talla': talla}  # Almacenar el objeto Producto directamente
+        item = {'producto_id': producto_id, 'cantidad': cantidad, 'talla': talla}
         carrito = session.get('carrito', [])
         carrito.append(item)
         session['carrito'] = carrito
@@ -282,11 +282,17 @@ def producto(producto_id):
     return render_template('producto.html', product=producto)  # Pasar el objeto Producto directamente al template
 
 
-@app.route('/carrito')
 def ver_carrito():
     carrito = session.get('carrito', [])
-    total = sum(float(item['producto'].precio) * float(item['cantidad']) for item in carrito)
-    return render_template('carrito.html', carrito=carrito, total=total)
+    productos_en_carrito = []
+    total = 0
+    for item in carrito:
+        producto = Producto.query.get_or_404(item['producto_id'])
+        subtotal = float(producto.precio) * float(item['cantidad'])
+        total += subtotal
+        productos_en_carrito.append({'producto': producto, 'cantidad': item['cantidad'], 'subtotal': subtotal})
+    return render_template('carrito.html', carrito=productos_en_carrito, total=total)
+
 
 
 
