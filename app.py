@@ -282,11 +282,15 @@ def producto(producto_id):
     return render_template('producto.html', product=producto.to_dict())  # Utilizar to_dict() para convertir el producto en un diccionario
 
 
+
+
 @app.route('/carrito')
 def ver_carrito():
     carrito = session.get('carrito', [])
     total = sum(float(item['producto'].precio) * float(item['cantidad']) for item in carrito)
     return render_template('carrito.html', carrito=carrito, total=total)
+
+
 
 @app.route('/vaciar_carrito', methods=['POST'])
 def vaciar_carrito():
