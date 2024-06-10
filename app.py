@@ -246,6 +246,7 @@ def merchandising():
     elif request.method == 'GET':
         if 'rol' in session and session['rol'] == 'admin':
             productos = Producto.query.all()
+            print(productos)
             return render_template('crud_merchan.html', productos=productos)
         else:
             productos = Producto.query.all()
