@@ -272,7 +272,7 @@ def producto(producto_id):
     if request.method == 'POST':
         cantidad = int(request.form['cantidad'])
         talla = request.form.get('talla', 'S')
-        item = {'producto': producto.to_dict(), 'cantidad': cantidad, 'talla': talla}  # Utilizar to_dict() para convertir el producto en un diccionario
+        item = {'producto': producto, 'cantidad': cantidad, 'talla': talla}  # Utilizar el objeto Producto directamente
         carrito = session.get('carrito', [])
         carrito.append(item)
         session['carrito'] = carrito
@@ -280,6 +280,7 @@ def producto(producto_id):
         return redirect(url_for('ver_carrito'))
 
     return render_template('producto.html', product=producto.to_dict())  # Utilizar to_dict() para convertir el producto en un diccionario
+
 
 
 
