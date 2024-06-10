@@ -21,11 +21,12 @@ db = SQLAlchemy(app)
 
 # Definir el modelo de usuario
 class User(db.Model):
+    __tablename__ = 'usuarios'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
-    rol = db.Column(db.String(50), nullable=False)
+    name = db.Column(db.String(155), nullable=False)
+    email = db.Column(db.String(255), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    rol = db.Column(db.String(100), nullable=False)
 
 # Define el modelo de producto
 class Producto(db.Model):
@@ -50,7 +51,7 @@ class Peticion(db.Model):
     id_edicion = db.Column(db.Integer, nullable=False)
     nombre = db.Column(db.String(255), nullable=False)
     aka = db.Column(db.String(255), nullable=False)
-    telefono = db.Column(db.String(20), nullable=False)
+    telefono = db.Column(db.Integer, nullable=False)
     tipo = db.Column(db.String(50), nullable=False)
 
 # Configuración para subir archivos
