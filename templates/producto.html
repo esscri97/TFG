@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
-{% block title %}{{ product[2] }}{% endblock %}
+{% block title %}{{ product.nombre }}{% endblock %}
 
 {% block content %}
 {% include 'navbar.html' %}
 <div class="container mt-4">
-    <h2>{{ product[2] }}</h2>
+    <h2>{{ product.nombre }}</h2>
     <div class="row">
         <div class="col-md-6">
-            <img id="main-image" src="{{ url_for('static', filename='images/productos/' + product[3]) }}" class="img-fluid" alt="{{ product[2] }}">
+            <img id="main-image" src="{{ url_for('static', filename='images/productos/' + product.imagen) }}" class="img-fluid" alt="{{ product.nombre }}">
         </div>
         <div class="col-md-6">
-            <h5>Precio: {{ product[6] }}€</h5>
-            <p>Descripción: {{ product[5] }}</p>
+            <h5>Precio: {{ product.precio }}€</h5>
+            <p>Descripción: {{ product.descripcion }}</p>
             <form method="POST">
                 <div class="form-group">
                     <label for="cantidad">Cantidad</label>
