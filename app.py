@@ -6,6 +6,7 @@ import bcrypt
 from flask_mysqldb import MySQL  # Necesario pip install flask_mysqldb
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
+import pickle
 
 app = Flask(__name__)
 
@@ -39,6 +40,17 @@ class Producto(db.Model):
     cantidad = db.Column(db.Integer, nullable=False)
     descripcion = db.Column(db.String(500), nullable=False)
     precio = db.Column(db.Float, nullable=False)
+
+    def to_dict(self):
+        return {
+            'id_producto': self.id_producto,
+            'id_edicion': self.id_edicion,
+            'nombre': self.nombre,
+            'imagen': self.imagen,
+            'cantidad': self.cantidad,
+            'descripcion': self.descripcion,
+            'precio': self.precio
+        }
 
 class Edition(db.Model):
     __tablename__ = 'ediciones'
@@ -260,14 +272,15 @@ def producto(producto_id):
     if request.method == 'POST':
         cantidad = int(request.form['cantidad'])
         talla = request.form.get('talla', 'S')
-        item = {'producto': producto, 'cantidad': cantidad, 'talla': talla}  # Crear un diccionario con los datos del producto
+        item = {'producto': producto.to_dict(), 'cantidad': cantidad, 'talla': talla}  # Utilizar to_dict() para convertir el producto en un diccionario
         carrito = session.get('carrito', [])
         carrito.append(item)
         session['carrito'] = carrito
         flash('Producto añadido al carrito.', 'success')
         return redirect(url_for('ver_carrito'))
 
-    return render_template('producto.html', product=producto)
+    return render_template('producto.html', product=producto.to_dict())  # Utilizar to_dict() para convertir el producto en un diccionario
+
 
 @app.route('/carrito')
 def ver_carrito():
