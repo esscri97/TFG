@@ -54,16 +54,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for i, product in enumerate(carrito) %}
+                    {% for i, item in enumerate(carrito) %}
                     <tr>
                         <td>
                             <input type="checkbox" name="productos_a_eliminar" value="{{ i }}">
                         </td>
-                        <td>{{ product.nombre }}</td>
-                        <td>{{ product.precio }}€</td>
-                        <td>{{ product.cantidad }}</td>
-                        <td>{{ product.talla }}</td>
-                        <td>{{ (product.precio|float) * (product.cantidad|float) }}€</td>
+                        <td>{{ item['producto'].nombre }}</td>
+                        <td>{{ item['producto'].precio }}€</td>
+                        <td>{{ item['cantidad'] }}</td>
+                        <td>{{ item['talla'] }}</td>
+                        <td>{{ (item['producto'].precio|float) * (item['cantidad']|float) }}€</td>
                     </tr>
                     {% endfor %}
                     <tr>
