@@ -24,7 +24,7 @@
             margin: 0;
         }
 
-        #content {
+        .container {
             flex: 1;
         }
 
@@ -84,16 +84,11 @@
         <p>Tu carrito está vacío.</p>
         {% endif %}
     </div>
-    {% include 'footer.html' %}
+    <div id="footer">
+        {% include 'footer.html' %}
+    </div>
 
-    <script>
-        function handlePurchase() {
-            // Abrir la página de PayPal en una nueva pestaña
-            window.open('https://www.paypal.com/es/home', '_blank');
-            // Dejar que el formulario se envíe y redirija a la página de agradecimiento
-            return true;
-        }
-    </script>
+    <script src="{{url_for('static', filename='js/carrito.js')}}"></script>
 </body>
 
 </html>
