@@ -41,6 +41,20 @@
         a{
             color: white;
         }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            width: 20px; /* Ajusta el tamaño de la imagen según sea necesario */
+            height: 20px; /* Ajusta el tamaño de la imagen según sea necesario */
+        }
     </style>
 </head>
 
@@ -62,15 +76,16 @@
                         <input type="email" class="form-control mb-3" name="email">
     
                         <label>Contraseña</label>
-                        <input type="password" class="form-control mb-3" name="password">
+                        <div class="password-container">
+                            <input type="password" class="form-control mb-3" name="password" id="password">
+                            <img src="{{ url_for('static', filename='images/ojo.png') }}" id="togglePassword" class="password-toggle" alt="Toggle Password">
+                        </div>
     
                         {% if message %}
-    
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <strong>ERROR: </strong>{{ message }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
-    
                         {% endif %}
     
                         <button type="submit" class="btn btn-custom w-100 btn-outline-success">Acceder</button>
@@ -80,6 +95,8 @@
             </div>
         </div>
     </main>
+
+    <script src="{{ url_for('static',filename='js/login.js')}}"></script>
 
 </body>
 

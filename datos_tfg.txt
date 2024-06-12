@@ -3,3 +3,9 @@ password: AlloroFest2019.
 
 email prueba: prueba@gmail.com		
 password: Prueba1997.
+
+para conectar a la bbdd: 
+psql -h dpg-cpiqqp21hbls73blh9f0-a.oregon-postgres.render.com -U festival_whtt_user -d festival_whtt
+
+password: 
+HghpwIHwamviE0xtak6vejdrehzI4wGe

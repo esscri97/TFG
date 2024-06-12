@@ -37,6 +37,20 @@
             background-color: white;
             color: green;
         }
+
+        .password-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            width: 20px; /* Ajusta el tamaño de la imagen según sea necesario */
+            height: 20px; /* Ajusta el tamaño de la imagen según sea necesario */
+        }
     </style>
 </head>
 
@@ -62,7 +76,10 @@
                         <input type="email" class="form-control mb-3" name="email">
 
                         <label>Contraseña</label>
-                        <input type="password" class="form-control mb-3" name="password" id="password">
+                        <div class="password-container">
+                            <input type="password" class="form-control mb-3" name="password" id="password">
+                            <img src="{{ url_for('static', filename='images/ojo.png') }}" id="togglePassword" class="password-toggle" alt="Toggle Password">
+                        </div>
 
                         <div id="password-error" class="text-danger"></div>
                         <!-- Aquí se mostrará el mensaje de error -->

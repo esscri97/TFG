@@ -1,12 +1,11 @@
-from flask import Flask, render_template, url_for, request, session, redirect, flash, send_from_directory
+from flask import Flask, render_template, url_for, request, session, redirect, flash
 import os
 from werkzeug.utils import secure_filename
 import requests
 import bcrypt
-from flask_mysqldb import MySQL  # Necesario pip install flask_mysqldb
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
-import pickle
+
 
 app = Flask(__name__)
 
