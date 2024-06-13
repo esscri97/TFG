@@ -25,7 +25,7 @@
             background: #fff;
         }
 
-        .btn-custom {
+        .envio {
             background-color: green;
             color: white;
             border: none;
@@ -34,7 +34,7 @@
             transition: background-color 0.3s;
         }
 
-        .btn-custom:hover {
+        .envio:hover {
             background-color: white;
             border: 1px solid green;
             color: green
@@ -74,7 +74,7 @@
                 <label for="nombre_artista">Nombre del Artista:</label>
                 <input type="text" class="form-control" id="nombre_artista" name="nombre_artista" required>
             </div>
-            <button type="submit" class="btn btn-success btn-block mb-5">Buscar</button>
+            <button type="submit" class="btn btn-success btn-block mb-5 envio">Buscar</button>
         </form>
 
         {% if error %}

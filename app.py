@@ -27,7 +27,7 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     rol = db.Column(db.String(100), nullable=False)
 
-# Define el modelo de producto
+
 class Producto(db.Model):
     __tablename__ = 'productos'
     id_producto = db.Column(db.Integer, primary_key=True)
@@ -281,7 +281,6 @@ def producto(producto_id):
         carrito = session.get('carrito', [])
         carrito.append(item)
         session['carrito'] = carrito
-        flash('Producto añadido al carrito.', 'success')
         return redirect(url_for('ver_carrito'))
 
     return render_template('producto.html', product=producto)
@@ -302,7 +301,6 @@ def ver_carrito():
 def vaciar_carrito():
     session.pop('carrito', None)
     session.modified = True  # Asegurarse de que la sesión se guarde
-    flash('El carrito ha sido vaciado.', 'success')
     return redirect(url_for('ver_carrito'))
 
 @app.route('/eliminar_del_carrito', methods=['POST'])
@@ -311,7 +309,6 @@ def eliminar_del_carrito():
     if 'carrito' in session:
         session['carrito'] = [producto for i, producto in enumerate(session['carrito']) if str(i) not in productos_a_eliminar]
         session.modified = True  # Asegurarse de que la sesión se guarde
-        flash('Producto(s) eliminado(s) del carrito.', 'success')
     return redirect(url_for('ver_carrito'))
 
 @app.route('/merchandising/edit/<int:id>', methods=['POST'])
