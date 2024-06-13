@@ -36,7 +36,7 @@
             color: green;
         }
 
-        a{
+        a {
             color: white;
         }
 
@@ -50,8 +50,8 @@
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            width: 20px; /* Ajusta el tamaño de la imagen según sea necesario */
-            height: 20px; /* Ajusta el tamaño de la imagen según sea necesario */
+            width: 20px;
+            height: 20px;
         }
     </style>
 </head>
@@ -60,32 +60,32 @@
     {% include 'navbar.html' %}
 
     <main class="d-flex">
-        <div class="container-fluid row m-o vh-100 justify-content-center align-items-center">
-            <div class="card shadow w-50">
-                <div class="card-body ">
+        <div class="container-fluid d-flex vh-100 justify-content-center align-items-center">
+            <div class="card shadow col-12 col-md-8 col-lg-6 col-xl-4">
+                <div class="card-body">
                     <form action="/login" method="post">
                         <div class="d-flex justify-content-center">
-                            <img src="{{ url_for('static',filename='images/logo_byv.png')}}" width="150" class="mb-3">
+                            <img src="{{ url_for('static', filename='images/logo_byv.png') }}" width="150" class="mb-3">
                         </div>
-    
+
                         <h5 class="text-center">Login</h5>
-    
+
                         <label>Email</label>
                         <input type="email" class="form-control mb-3" name="email">
-    
+
                         <label>Contraseña</label>
                         <div class="password-container">
                             <input type="password" class="form-control mb-3" name="password" id="password">
                             <img src="{{ url_for('static', filename='images/ojo.png') }}" id="togglePassword" class="password-toggle" alt="Toggle Password">
                         </div>
-    
+
                         {% if message %}
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <strong>ERROR: </strong>{{ message }}
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                         {% endif %}
-    
+
                         <button type="submit" class="btn btn-custom w-100 btn-outline-success">Acceder</button>
                         <p class="mt-2">¿No tienes cuenta? <b><a href="/register">Registrate</a></b></p>
                     </form>
@@ -94,7 +94,7 @@
         </div>
     </main>
 
-    <script src="{{ url_for('static',filename='js/login.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
 
 </body>
 

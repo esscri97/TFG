@@ -46,8 +46,8 @@
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            width: 20px; /* Ajusta el tamaño de la imagen según sea necesario */
-            height: 20px; /* Ajusta el tamaño de la imagen según sea necesario */
+            width: 20px;
+            height: 20px; 
         }
     </style>
 </head>
@@ -57,12 +57,12 @@
     {% include 'navbar.html' %}
 
     <main class="d-flex">
-        <div class="container-fluid row m-o vh-100 justify-content-center align-items-center">
-            <div class="card shadow w-50">
-                <div class="card-body ">
+        <div class="container-fluid d-flex vh-100 justify-content-center align-items-center">
+            <div class="card shadow col-12 col-md-8 col-lg-6 col-xl-4">
+                <div class="card-body">
                     <form action="/register" method="post" onsubmit="return validatePassword()">
                         <div class="d-flex justify-content-center">
-                            <img src="{{ url_for('static',filename='images/logo_byv.png')}}" width="150" class="mb-3">
+                            <img src="{{ url_for('static', filename='images/logo_byv.png') }}" width="150" class="mb-3">
                         </div>
 
                         <h5 class="text-center">Crear cuenta</h5>
@@ -91,7 +91,7 @@
         </div>
     </main>
 
-    <script src="{{ url_for('static',filename='js/register.js')}}"></script>
+    <script src="{{ url_for('static', filename='js/register.js') }}"></script>
 </body>
 
 </html>

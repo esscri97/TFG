@@ -6,7 +6,6 @@ import bcrypt
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 
-
 app = Flask(__name__)
 
 # Cargar variables de entorno
@@ -19,7 +18,7 @@ app.config['SECRET_KEY'] = 'secret'
 # Inicializar la extensión SQLAlchemy
 db = SQLAlchemy(app)
 
-# Definir el modelo de usuario
+# Definir modelos necesarios
 class User(db.Model):
     __tablename__ = 'usuarios'
     id = db.Column(db.Integer, primary_key=True)
@@ -27,7 +26,6 @@ class User(db.Model):
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     rol = db.Column(db.String(100), nullable=False)
-
 
 # Define el modelo de producto
 class Producto(db.Model):
@@ -145,10 +143,12 @@ def buscar_artista():
     elif request.method == 'GET':
         return render_template('artistas.html')
 
+# Función para obtener información de un artista desde la API de Spotify
 def obtener_informacion_artista(nombre_artista):
     client_id = '00c2a60a76ac41f39d30afefccc5ddf2'
     client_secret = '797983182a9f4160b34c98d69eca0b2c'
     
+    # Autenticación para obtener el token de acceso
     auth_response = requests.post('https://accounts.spotify.com/api/token', {
         'grant_type': 'client_credentials',
         'client_id': client_id,
@@ -167,6 +167,7 @@ def obtener_informacion_artista(nombre_artista):
     
     headers = {'Authorization': f'Bearer {access_token}'}
     
+    # Solicitud para buscar al artista
     response = requests.get('https://api.spotify.com/v1/search', 
                             headers=headers, 
                             params={'q': nombre_artista, 'type': 'artist'})
@@ -269,7 +270,6 @@ def merchandising():
             productos = Producto.query.all()
             return render_template('merchandising.html', productos=productos)
 
-
 @app.route('/producto/<int:producto_id>', methods=['GET', 'POST'])
 def producto(producto_id):
     producto = Producto.query.get_or_404(producto_id)
@@ -298,14 +298,12 @@ def ver_carrito():
         productos_en_carrito.append({'producto': producto, 'cantidad': item['cantidad'], 'subtotal': subtotal})
     return render_template('carrito.html', carrito=productos_en_carrito, total=total)
 
-
 @app.route('/vaciar_carrito', methods=['POST'])
 def vaciar_carrito():
     session.pop('carrito', None)
     session.modified = True  # Asegurarse de que la sesión se guarde
     flash('El carrito ha sido vaciado.', 'success')
     return redirect(url_for('ver_carrito'))
-
 
 @app.route('/eliminar_del_carrito', methods=['POST'])
 def eliminar_del_carrito():
@@ -315,7 +313,6 @@ def eliminar_del_carrito():
         session.modified = True  # Asegurarse de que la sesión se guarde
         flash('Producto(s) eliminado(s) del carrito.', 'success')
     return redirect(url_for('ver_carrito'))
-
 
 @app.route('/merchandising/edit/<int:id>', methods=['POST'])
 def edit_product(id):
@@ -334,7 +331,6 @@ def edit_product(id):
 
     db.session.commit()
     return redirect(url_for('merchandising'))
-
 
 @app.route('/merchandising/delete/<int:id>', methods=['POST'])
 def delete_product(id):
@@ -373,7 +369,6 @@ def comprar():
 def compra_gracias():
     return render_template('gracias-compra.html')
 
-
 @app.route('/avisolegal', methods=['GET'])
 def avisolegal():
     return render_template('aviso-legal.html')
@@ -393,7 +388,6 @@ def trabaja():
 @app.route('/faq', methods=['GET'])
 def faq():
     return render_template('faq.html')
-
 
 if __name__ == '__main__':
     app.run(debug=True)
