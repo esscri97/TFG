@@ -46,17 +46,6 @@
     </div>
   </div>
 </div>
-<script>
-  document.getElementById("miFormulario").addEventListener("submit", function(event){
-    event.preventDefault(); // Evita que el formulario se envíe automáticamente
-    this.submit(); // Envía el formulario
-
-    // Redirige al usuario a otra página después de 3 segundos
-    setTimeout(function(){
-      window.location.href = "https://tfg-udp9.onrender.com/contacto";
-    }, 3000); // 3000 milisegundos = 3 segundos
-  });
-</script>
 
 {% include 'footer.html' %}
 {% endblock %}
