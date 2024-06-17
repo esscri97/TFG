@@ -64,7 +64,7 @@ class Edition(db.Model):
 class Peticion(db.Model):
     __tablename__ = 'peticiones'
     id_peticion = db.Column(db.Integer, primary_key=True)
-    id_edicion = db.Column(db.Integer, nullable=False)
+    id_edicion = db.Column(db.Integer, db.ForeignKey('ediciones.id_edicion'), nullable=False)
     nombre = db.Column(db.String(255), nullable=False)
     aka = db.Column(db.String(255), nullable=False)
     telefono = db.Column(db.Integer, nullable=False)
@@ -97,7 +97,7 @@ def login():
 
         if user is not None and bcrypt.checkpw(password.encode(), user.password.encode()):
             session['email'] = email
-            session['nombre'] = user.nombre  # Aquí corregimos el atributo a 'nombre'
+            session['nombre'] = user.nombre #Creamos las sesiones
             session['rol'] = user.rol
             return redirect(url_for('home'))
         else:
@@ -264,7 +264,7 @@ def merchandising():
     elif request.method == 'GET':
         if 'rol' in session and session['rol'] == 'admin':
             productos = Producto.query.all()
-            print(productos)
+            
             return render_template('crud_merchan.html', productos=productos)
         else:
             productos = Producto.query.all()
